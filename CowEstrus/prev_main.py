@@ -15,13 +15,15 @@ def preprocess_data(data):
     data["duration_minutes"] = (data["END"] - data["START"]).dt.total_seconds() / 60
 
     # Drop the unnecessary columns
-    data = data.drop(["DATE", "START", "END", "DURATION"], axis=1)
+    data = data.drop(["DATE", "START", "END"], axis=1)
 
     # Scale the data using MinMaxScaler
     scaler = MinMaxScaler()
     data_scaled = scaler.fit_transform(data)
 
     return data_scaled, scaler
+
+
 
 # Read the data from a CSV file
 data = pd.read_csv("cow_data.csv")
@@ -35,6 +37,15 @@ print("Missing values:", data.isnull().sum().sum())
 print("Infinite values:", data[numeric_columns].applymap(np.isinf).sum().sum())
 # Drop rows with missing values
 data = data.dropna()
+for col in data.columns:
+    if data[col].dtype == object:
+        try:
+            data[col] = pd.to_timedelta(data[col], errors='coerce').dt.total_seconds() / 60
+        except ValueError:
+            pass
+
+# Preprocess the data
+data_scaled, scaler = preprocess_data(data)
 
 # Preprocess the data
 data_scaled, scaler = preprocess_data(data)
