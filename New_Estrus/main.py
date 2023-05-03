@@ -1,16 +1,15 @@
-# This is a sample Python script.
+import pandas as pd
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# Read the dataset (replace 'your_dataset.csv' with the path to your dataset)
+data = pd.read_csv('cow_data.csv')
 
+# Move the 'Estrus Status' column to the last position
+cols = data.columns.tolist()
+cols.remove('Estrus Status')
+cols.append('Estrus Status')
+data = data[cols]
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+# Save the modified dataset (you can change 'modified_dataset.csv' to your desired output file name)
+data.to_csv('modified_dataset.csv', index=False)
 
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+print("Dataset saved with 'Estrus Status' as the last column.")
