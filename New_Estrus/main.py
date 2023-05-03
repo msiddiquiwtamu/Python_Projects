@@ -5,7 +5,7 @@ from keras.layers import LSTM, Dense
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
-
+import joblib
 # Read data
 data = pd.read_csv('updated_cow_data.csv')
 
@@ -33,6 +33,9 @@ data = pd.get_dummies(data, columns=categorical_vars)
 # Scale the data
 scaler = MinMaxScaler(feature_range=(0, 1))
 scaled_data = scaler.fit_transform(data)
+joblib.dump(data.columns, 'data_columns.pkl')
+
+joblib.dump(scaler, 'data_scaler.pkl')
 
 
 
@@ -62,3 +65,5 @@ y_pred_inv = scaler.inverse_transform(np.concatenate((X_test[:, :, :].reshape(X_
 # Calculate RMSE
 rmse = np.sqrt(mean_squared_error(y_test_inv, y_pred_inv))
 print('Test RMSE: %.3f' % rmse)
+
+joblib.dump(model, 'trained_model.pkl')
